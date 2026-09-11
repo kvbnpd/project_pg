@@ -1,0 +1,143 @@
+{% extends "indexnav.html" %}
+
+{% block stylecontent1 %}
+<style>
+    /* General Styling */
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+
+    /* Header Section */
+    .single-page-header {
+        background-color: #007bff;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    /* Form Container */
+    .container2 {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .form-container h2 {
+        margin-bottom: 20px;
+        color: #007bff;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="password"],
+    select,
+    input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    input[type="file"] {
+        padding: 3px;
+    }
+
+    select {
+        height: 40px;
+    }
+
+    input:focus, select:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    /* Error Message Styling */
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    /* Submit Button */
+    .form-actions {
+        text-align: center;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<section class="single-page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2></h2>
+                <ol class="breadcrumb header-bradcrumb justify-content-center">
+                    <li class="breadcrumb-item"><a href="index.html" class="text-white"></a></li>
+                    <li class="breadcrumb-item active" aria-current="page"></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Registration Section -->
+<section class="register" id="register">
+    <div class="container2">
+        <div class="form-container">
+            <h2>Create Your Account</h2>
+            <form id="user-register-form" method="post" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    
+                    <!-- Display Field Errors -->
+                    {% if field.errors %}
+                    {% for error in field.errors %}
+                        <p class="error-message">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <input type="submit" value="Register" class="btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

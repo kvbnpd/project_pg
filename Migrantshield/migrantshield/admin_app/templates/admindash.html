@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            height: 100vh;
+            background: #1c1c1c; /* Dark background */
+            color: white; /* White text for dark theme */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #000; /* Black sidebar */
+            padding: 20px;
+            color: white;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto; /* Enables vertical scroll */
+            overflow-x: hidden;
+            scrollbar-width: thin; /* For Firefox */
+        }
+
+        /* Scrollbar styling for WebKit browsers */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 3px;
+        }
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: white;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .sidebar ul li a:hover {
+            background: #ff3333; /* Highlight color on hover */
+        }
+
+        /* Submenu Styles */
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+        .submenu li {
+            margin: 5px 0;
+        }
+        .submenu a {
+            font-size: 14px;
+            padding: 8px;
+        }
+        .has-submenu:hover .submenu {
+            display: block;
+        }
+
+        /* Content Section */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            width: 100%;
+            background-color: #121212; /* Dark content background */
+            color: white;
+        }
+
+        /* Buttons and Links */
+        a {
+            color: #fff;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #ff3333;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #ff1a1a;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                overflow: hidden;
+            }
+            .sidebar h2 {
+                display: none;
+            }
+            .sidebar ul li a {
+                text-align: center;
+            }
+            .content {
+                margin-left: 60px;
+                padding: 10px;
+            }
+        }
+    </style>
+    {% block stylecontent %}
+    {% endblock %}
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="{% url 'adminhome' %}"><i class="fas fa-home"></i> Home</a></li>
+            <li class="has-submenu">
+                <a href="#"><i class="fas fa-user-tie"></i> Manage Contractors</a>
+                <ul class="submenu">
+                    <li><a href="{% url 'view_active_contractors' %}">View Contractors</a></li>
+                    <li><a href="{% url 'view_pending_contractors' %}">Approve Contractor</a></li>
+                </ul>
+            </li>
+            <li><a href="{% url 'view_type_of_work' %}"><i class="fas fa-tools"></i> Type of Work</a></li>
+            <li><a href="{% url 'allmigrants' %}"><i class="fas fa-users"></i> Migrant Workers</a></li>
+            <li><a href="{% url 'view_payments' %}"><i class="fas fa-money-bill"></i> Payments</a></li>
+            <li><a href="http://127.0.0.1:8000/user-queries"><i class="fas fa-question-circle"></i> User Queries</a></li>
+            <li><a href="{% url 'view_crime_reports' %}"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            <li><a href="http://127.0.0.1:8000/login/"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="{% url 'add_police_station' %}"><i class="fas fa-building"></i> Add Police Station</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

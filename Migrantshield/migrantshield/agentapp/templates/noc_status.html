@@ -1,0 +1,73 @@
+{% extends "agent_nav.html" %}
+{% block stylecontent %}
+<title>NOC Status - Government of Kerala</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .container {
+        margin-top: 50px;
+        max-width: 900px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .table-responsive {
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3 class="text-center text-primary">Government of Kerala</h3>
+    <h5 class="text-center text-dark">NOC Application Status</h5>
+    <hr>
+
+    <!-- Table to Show NOC Status -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Application No</th>
+                    <th>Migrant Name</th>
+                    <th>Status</th>
+                    <th>Applied Date</th>
+                    <th>Download</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td>{{ application.id }}</td>
+                    <td>{{ application.migrant__full_name }}</td>
+                    <td>
+                        {% if application.status == "Approved" %}
+                            <span class="badge bg-success">Approved</span>
+                        {% else %}
+                            <span class="badge bg-warning">{{application.status}}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ application.applied_date|date:"d-m-Y H:i" }}</td>
+                    <td>
+                        {% if application.status == "Approved" %}
+                            <a href="{% url 'download_noc' application.migrant_id %}" class="btn btn-primary btn-sm">
+                                <i class="fa fa-download"></i> Download NOC
+                            </a>
+                        {% else %}
+                            <span class="text-danger">Pending</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No applications found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

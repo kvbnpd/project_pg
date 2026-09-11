@@ -1,0 +1,141 @@
+{% extends "admindash.html" %}
+{% block stylecontent %}
+    <style>
+        /* Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Heading Styling */
+        h2 {
+            background: linear-gradient(to right, #ff4d4d, #cc0000);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: rgb(0, 0, 0);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #000000;
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #cc0000;
+            color: rgb(0, 0, 0);
+            font-weight: bold;
+        }
+
+        /* Alternate row colors */
+        tbody tr:nth-child(odd) {
+            background-color: #000000;
+        }
+
+        tbody tr:hover {
+            background-color: #000000;
+            transition: 0.3s;
+        }
+
+        /* Buttons */
+        .approve, .reject {
+            cursor: pointer;
+            padding: 8px 12px;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            display: inline-block;
+            transition: 0.3s ease-in-out;
+        }
+
+        .approve { 
+            background-color: #28a745; /* Green */
+        }
+
+        .approve:hover {
+            background-color: #218838;
+        }
+
+        .reject { 
+            background-color: #dc3545; /* Red */
+        }
+
+        .reject:hover {
+            background-color: #c82333;
+        }
+
+        /* Aadhaar Link */
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h2>Pending Contractors</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-weight: bold; text-align: center;">
+                {{ message }}
+            </p>
+        {% endfor %}
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>License No</th>
+                <th>Location</th>
+                <th>City</th>
+                <th>Phone</th>
+                <th>Aadhaar</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contractor in contractors %}
+            <tr>
+                <td>{{ contractor.name }}</td>
+                <td>{{ contractor.licenseNo }}</td>
+                <td>{{ contractor.location }}</td>
+                <td>{{ contractor.city }}</td>
+                <td>{{ contractor.phone }}</td>
+                <td><a href="{{ contractor.aadhaar_card.url }}" target="_blank">View Aadhaar</a></td>
+                <td>
+                    <a href="{% url 'approve_contractor' contractor.id %}" class="approve"><i class="fas fa-check"></i> Approve</a>
+                    <a href="{% url 'reject_contractor' contractor.id %}" class="reject"><i class="fas fa-trash"></i> Reject</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">No pending contractors.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "agent_nav.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        #calendar {
+            margin-top: 20px;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center">📅 My Schedule</h2>
+    <div id="calendar"></div>
+</div>
+
+<!-- Modal Form -->
+<div class="modal fade" id="workEntryModal" tabindex="-1" aria-labelledby="workEntryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Work Entry</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="workEntryForm">
+                    <input type="hidden" id="selectedDate" name="date">
+                    
+                    <div class="mb-3">
+                        <label for="jobDetails" class="form-label">Select Job</label>
+                        <select class="form-control" id="jobDetails" name="jobdetails">
+                            <option value="">-- Select Job --</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Select Migrants</label>
+                        <div id="migrantsList"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Save Entry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            dateClick: function(info) {
+                document.getElementById('selectedDate').value = info.dateStr;
+                fetchJobDetails();
+                var modal = new bootstrap.Modal(document.getElementById('workEntryModal'));
+                modal.show();
+            }
+        });
+        calendar.render();
+    });
+
+    function fetchJobDetails() {
+        fetch('/get-job-details/')
+            .then(response => response.json())
+            .then(data => {
+                let jobSelect = document.getElementById('jobDetails');
+                jobSelect.innerHTML = '<option value="">-- Select Job --</option>';
+                data.forEach(job => {
+                    jobSelect.innerHTML += `<option value="${job.id}">${job.venue}</option>`;
+                });
+            });
+    }
+
+    document.getElementById('jobDetails').addEventListener('change', function() {
+        let jobId = this.value;
+        let date = document.getElementById('selectedDate').value;
+
+        if (!jobId || !date) return;
+
+        fetch(`/get-migrants/?job_id=${jobId}&date=${date}`)
+            .then(response => response.json())
+            .then(data => {
+                let migrantsList = document.getElementById('migrantsList');
+                migrantsList.innerHTML = "";
+
+                data.available_migrants.forEach(migrant => {
+                    migrantsList.innerHTML += `
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="migrants" value="${migrant.migrant__id}">
+                            <label class="form-check-label">${migrant.migrant__full_name}</label>
+                        </div>
+                    `;
+                });
+
+                if (data.excluded_migrants.length > 0) {
+                    migrantsList.innerHTML += `<p class="text-danger"><strong>Already Assigned:</strong></p>`;
+                    data.excluded_migrants.forEach(migrant => {
+                        migrantsList.innerHTML += `
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" disabled>
+                                <label class="form-check-label text-muted">${migrant.migrant__full_name} (Assigned)</label>
+                            </div>
+                        `;
+                    });
+                }
+            });
+    });
+    document.getElementById('workEntryForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let formData = new FormData(this);
+        fetch('/save-work-entry/', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            document.getElementById('workEntryForm').reset();
+            var modal = bootstrap.Modal.getInstance(document.getElementById('workEntryModal'));
+            modal.hide();
+        });
+    });
+</script>
+
+</body>
+</html>
+{% endblock %}

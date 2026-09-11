@@ -1,0 +1,34 @@
+{% extends "agent_nav.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Pay Salary for {{ month }}/{{ year }}</h2>
+    <form method="POST" action="{% url 'confirm_payment' %}">
+        {% csrf_token %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Migrant Name</th>
+                    <th>Total Work Days</th>
+                    <th>Salary (₹1000 per day)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in migrants_data %}
+                <tr>
+                    <td>{{ data.migrant.full_name }}</td>
+                    <td>{{ data.total_days }}</td>
+                    <td>₹{{ data.salary }}</td>
+                    <input type="hidden" name="migrant_{{ data.migrant.id }}" value="{{ data.migrant.id }}">
+                    <input type="hidden" name="days_{{ data.migrant.id }}" value="{{ data.total_days }}">
+                    <input type="hidden" name="salary_{{ data.migrant.id }}" value="{{ data.salary }}">
+                    <input type="hidden" name="month" value="{{ month }}">
+<input type="hidden" name="year" value="{{ year }}">
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-success">Pay Salary</button>
+    </form>
+</div>
+{% endblock %}

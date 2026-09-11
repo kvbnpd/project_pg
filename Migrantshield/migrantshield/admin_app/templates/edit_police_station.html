@@ -1,0 +1,127 @@
+{% extends "admindash.html" %}
+
+{% block stylecontent %}
+<style>
+    /* Page Styling */
+    h2 {
+        background: linear-gradient(to right, #ff4d4d, #cc0000);
+        color: white;
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    /* Form Styling */
+    .form-container {
+        width: 50%;
+        margin: 0 auto 20px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 70%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin: 8px 0;
+    }
+
+    .add-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+    .add-btn:hover {
+        background-color: #218838;
+    }
+
+    /* Table Styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    th {
+        background-color: #cc0000;
+        color: white;
+        font-weight: bold;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    tbody tr:hover {
+        background-color: #f1f1f1;
+        transition: 0.3s;
+    }
+
+    /* Delete Button */
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-block;
+        transition: 0.3s ease-in-out;
+    }
+
+    .delete-btn:hover {
+        background-color: #c82333;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Edit Police Station</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <p style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; text-align: center;">
+            {{ message }}
+        </p>
+    {% endfor %}
+{% endif %}
+
+<div class="form-container">
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="name" value="{{ station.name }}" placeholder="Police Station Name" required><br>
+        <input type="text" name="location" value="{{ station.location }}" placeholder="Location" required><br>
+        <input type="text" name="district" value="{{ station.district }}" placeholder="District" required><br>
+        <input type="text" name="email" value="{{ station.login.email }}" placeholder="Login Email" required><br>
+        <input type="password" name="password" value="{{ station.login.password }}" placeholder="Login Password" required><br>
+        <button type="submit" class="add-btn">Update Police Station</button>
+    </form>
+</div>
+{% endblock %}

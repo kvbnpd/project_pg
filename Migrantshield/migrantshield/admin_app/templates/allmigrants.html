@@ -1,0 +1,192 @@
+{% extends "admindash.html" %}
+
+{% block stylecontent %}
+<style>
+    /* Table Container */
+    .table-container {
+        margin-top: 20px;
+        background: #1c1c1c;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(255, 51, 51, 0.3);
+    }
+
+    /* Heading Style */
+    h2 {
+        color: #ff3333;
+        margin-bottom: 15px;
+    }
+
+    /* Search Bar Container */
+    .search-container {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .search-wrapper {
+        position: relative;
+        width: 350px;
+    }
+
+    /* Cool Search Input */
+    .search-input {
+        width: 100%;
+        padding: 12px 45px 12px 15px;
+        border: 1px solid #ff3333;
+        border-radius: 25px;
+        background: #121212;
+        color: white;
+        outline: none;
+        font-size: 16px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .search-input:focus {
+        border-color: #ff1a1a;
+        box-shadow: 0 0 8px rgba(255, 51, 51, 0.7);
+    }
+
+    /* Search Icon */
+    .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ff3333;
+        font-size: 1.2em;
+        pointer-events: none;
+    }
+
+    /* Table Styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #333;
+    }
+    th {
+        background: #ff3333;
+        color: white;
+    }
+    tr:hover {
+        background-color: #333;
+    }
+
+    /* Image Styling */
+    .migrant-photo {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #ff3333;
+    }
+
+    /* View More Icon */
+    .view-more {
+        color: #ff3333;
+        font-size: 1.2em;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+    .view-more:hover {
+        color: #ff1a1a;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        th, td {
+            padding: 8px;
+            font-size: 14px;
+        }
+        .migrant-photo {
+            width: 60px;
+            height: 60px;
+        }
+        .search-wrapper {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <!-- Heading Above Search Bar -->
+    <h2>Migrant Details</h2>
+
+    <!-- Search Bar BELOW the Heading -->
+    <div class="search-container">
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by name, state, or phone...">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+    </div>
+
+    {% if migrants %}
+    <table id="migrantTable">
+        <thead>
+            <tr>
+                <th>Photo</th>
+                <th>Full Name</th>
+                <th>Age</th>
+                <th>Phone</th>
+                <th>State</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for migrant in migrants %}
+            <tr>
+                <!-- Photo or Placeholder -->
+                <td>
+                    {% if migrant.photo %}
+                        <img src="{{ migrant.photo.url }}" alt="{{ migrant.full_name }}" class="migrant-photo">
+                    {% else %}
+                        <img src="https://via.placeholder.com/80" alt="No photo available" class="migrant-photo">
+                    {% endif %}
+                </td>
+                <!-- Migrant Details -->
+                <td>{{ migrant.full_name }}</td>
+                <td>{{ migrant.age }}</td>
+                <td>{{ migrant.phone }}</td>
+                <td>{{ migrant.state }}</td>
+                
+                <!-- View More Link -->
+                <td>
+                    <a href="{% url 'migrant_detail' migrant.id %}" class="view-more" title="View More">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #ff3333; margin-top: 10px;">No migrants available.</p>
+    {% endif %}
+</div>
+
+<!-- Search Filtering Script -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#migrantTable tbody tr');
+
+        rows.forEach(row => {
+            let fullName = row.cells[1].textContent.toLowerCase();
+            let phone = row.cells[3].textContent.toLowerCase();
+            let state = row.cells[4].textContent.toLowerCase();
+
+            if (fullName.includes(filter) || phone.includes(filter) || state.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "agent_nav.html" %}
+
+{% block stylecontent %}
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h2 {
+    color: #444;
+}
+
+.job-details {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.schedule-container {
+    margin-top: 20px;
+}
+
+.schedule-day {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.migrant-list {
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+}
+
+.migrant-list li {
+    background: #f9f9f9;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border-left: 5px solid #007BFF;
+}
+
+.back-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.back-btn:hover {
+    background-color: #0056b3;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Work Schedule for Job</h2>
+
+    <div class="job-details">
+        <p><strong>Venue:</strong> {{ job.venue }}</p>
+        <p><strong>Start Date:</strong> {{ job.startdate }}</p>
+        <p><strong>Description:</strong> {{ job.description }}</p>
+    </div>
+
+    <div class="schedule-container">
+        {% if work_schedule %}
+            {% for date, migrants in work_schedule.items %}
+                <div class="schedule-day">{{ date }}</div>
+                <ul class="migrant-list">
+                    {% for migrant in migrants %}
+                        <li>{{ migrant }}</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        {% else %}
+            <p style="color: #666;">No workers assigned to this job.</p>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'job_details_view' %}" class="back-btn">Back to Jobs</a>
+</div>
+{% endblock %}

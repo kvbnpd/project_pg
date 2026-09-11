@@ -1,0 +1,25 @@
+{% extends "admindash.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-light mb-4">Respond to User Query</h2>
+
+    <div class="card bg-dark text-white p-4 shadow">
+        <div class="mb-3"><strong>Name:</strong> {{ query.name }}</div>
+        <div class="mb-3"><strong>Email:</strong> {{ query.email }}</div>
+        <div class="mb-3"><strong>Subject:</strong> {{ query.subject }}</div>
+        <div class="mb-3"><strong>Message:</strong> {{ query.message }}</div>
+
+        <form method="POST" class="mt-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="response" class="form-label">Your Response</label>
+                <textarea name="response" id="response" rows="8" class="form-control" placeholder="Type your response here..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Send Response</button>
+            <a href="{% url 'view_user_queries' %}" class="btn btn-secondary ms-2">Back</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+  

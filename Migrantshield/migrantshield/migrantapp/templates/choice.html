@@ -1,0 +1,54 @@
+{% extends "indexnav.html" %}
+
+{% block stylecontent1 %}
+<style>
+    /* Custom Modal Styling */
+    .modal-content {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .btn-choice {
+        display: inline-block;
+        width: 200px;
+        padding: 15px;
+        margin: 10px;
+        background-color: #007bff;
+        color: white;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-choice:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<!-- Trigger Button -->
+<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#registerChoiceModal">
+    Not Registered? Click Here
+</button>
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="registerChoiceModal" tabindex="-1" aria-labelledby="registerChoiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerChoiceModalLabel">Register as:</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <a href="http://127.0.0.1:8000/reg" class="btn-choice">Contractor</a>
+                <a href="http://127.0.0.1:8000/migrantreg" class="btn-choice">Migrant</a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

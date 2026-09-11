@@ -1,0 +1,110 @@
+\{% extends "admindash.html" %}
+
+{% block stylecontent %}
+<style>
+    /* Container Styling */
+    .container {
+        margin-top: 50px;
+        background-color: #1c1c1c; /* Dark Background */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    h2 {
+        color: #ff4d4d;
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #ff3333;
+    }
+
+    /* Table Styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #2a2a2a; /* Darker Table Background */
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid #3a3a3a;
+        font-size: 16px;
+        color: #ccc; /* Light Text */
+    }
+
+    th {
+        background: #ff3333;
+        color: white;
+        text-transform: uppercase;
+    }
+
+    /* Row Styling */
+    tbody tr:nth-child(even) {
+        background: #1f1f1f;
+    }
+
+    tbody tr:hover {
+        background: #333;
+        transition: 0.3s ease-in-out;
+    }
+
+    /* No Data Styling */
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        font-size: 18px;
+        color: #888;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        th, td {
+            font-size: 14px;
+            padding: 8px 10px;
+        }
+        h2 {
+            font-size: 22px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Payment Records</h2>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Amount (₹)</th>
+                    <th>Date</th>
+                    <th>Migrant IDs</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.id }}</td>
+                    <td>₹{{ payment.amount }}</td>
+                    <td>{{ payment.date }}</td>
+                    <td>{{ payment.migrant_ids }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="no-data">No payments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,152 @@
+<!-- filepath: admin_app/templates/admin_app/view_crime_reports.html -->
+{% extends "admindash.html" %}
+
+{% block stylecontent %}
+<style>
+    /* Container Styling */
+    .container {
+        margin: 40px auto;
+        padding: 20px;
+        background: #1c1c1c; /* Dark background */
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        max-width: 1200px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #ff4d4d;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-bottom: 3px solid #ff3333;
+    }
+
+    /* Table Container */
+    .table-container {
+        overflow-x: auto;
+        border-radius: 10px;
+    }
+
+    /* Table Styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #2a2a2a; /* Darker table background */
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #3a3a3a; /* Darker border */
+        font-size: 16px;
+        color: #ccc; /* Light text */
+    }
+
+    th {
+        background: #ff3333;
+        color: white;
+        text-transform: uppercase;
+    }
+
+    /* Row Styling */
+    tbody tr:nth-child(even) {
+        background: #1f1f1f;
+    }
+
+    tbody tr:hover {
+        background: #333;
+        transition: 0.3s ease-in-out;
+    }
+
+    /* No Data Styling */
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        font-size: 18px;
+        color: #888;
+    }
+
+    /* Status Styling */
+    .status {
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 5px;
+        display: inline-block;
+    }
+
+    /* Status Colors */
+    .pending {
+        color: #ffcc00; /* Yellow */
+    }
+    .resolved {
+        color: #28a745; /* Green */
+    }
+    .investigation {
+        color: #ff8c00; /* Orange */
+    }
+    .rejected {
+        color: #dc3545; /* Red */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        th, td {
+            font-size: 14px;
+            padding: 8px 10px;
+        }
+
+        h2 {
+            font-size: 22px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Crime Reports</h2>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Reported By</th>
+                    <th>Migrant</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in crime_reports %}
+                <tr>
+                    <td>{{ report.id }}</td>
+                    <td>{{ report.reported_by }}</td>
+                    <td>{{ report.migrant.id }}</td>
+                    <td>{{ report.description }}</td>
+                    <td>{{ report.date }}</td>
+                    <td>
+                        {% if report.status == "Pending" %}
+                            <span class="status pending">🕓 Pending</span>
+                        {% elif report.status == "Resolved" %}
+                            <span class="status resolved">✅ Resolved</span>
+                        {% elif report.status == "Under Investigation" %}
+                            <span class="status investigation">🕵️ Under Investigation</span>
+                        {% else %}
+                            <span class="status rejected">❌ Rejected</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="no-data">No crime reports found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

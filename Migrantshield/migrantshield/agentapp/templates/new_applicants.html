@@ -1,0 +1,142 @@
+{% extends "agent_nav.html" %}
+{% block stylecontent %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{%endblock%}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center text-primary">New Applications for NOC</h2>
+    <table class="table table-bordered table-hover mt-3" id="applicationsTable">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Full Name</th>
+                <th>Age</th>
+                <th>Phone</th>
+                <th>State</th>
+                <th>Status</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application in applications %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ application.migrant.full_name }}</td>
+                <td>{{ application.migrant.age }}</td>
+                <td>{{ application.migrant.phone }}</td>
+                <td>{{ application.migrant.state }}</td>
+                <td><span class="badge bg-warning">{{ application.status }}</span></td>
+                <td>
+                    <input type="hidden" name="migrant_id" value="{{ application.migrant.id }}">
+                    <button class="btn btn-danger btn-sm remove-row">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center text-danger">No applications available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if applications %}
+    <form method="POST" action="{% url 'apply_noc_all' %}" id="applyNocForm">
+        {% csrf_token %}
+        <input type="hidden" name="migrant_ids" id="migrantIds">
+        
+        <!-- Display Total Amount -->
+        <div class="text-center">
+            <h4>Total Fee: ₹<span id="totalAmount">0</span></h4>
+        </div>
+
+        <!-- QR Code Placeholder -->
+        <div class="text-center mt-3">
+            <img id="qrCode" src="" alt="QR Code for Payment" style="display: none; width: 200px;">
+            <button type="submit" id="proceedApplication" class="btn btn-success" style="display: none;">Proceed</button>
+        </div>
+
+        <!-- Apply & Proceed Buttons -->
+        <div class="text-center mt-3">
+            <button type="button" id="generateQR" class="btn btn-primary">Generate Payment QR</button>
+            
+        </div>
+    </form>
+    {% endif %}
+</div>
+
+
+<!-- JavaScript to handle row removal -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let migrantIds = [];
+        const feePerApplication = 610;
+
+        function updateTotalAmount() {
+            let visibleRows = document.querySelectorAll("#applicationsTable tbody tr");
+            migrantIds = [];
+
+            visibleRows.forEach(row => {
+                let migrantIdInput = row.querySelector("input[name='migrant_id']");
+                if (migrantIdInput) {
+                    migrantIds.push(migrantIdInput.value);
+                }
+            });
+
+            let totalAmount = migrantIds.length * feePerApplication;
+            document.getElementById("totalAmount").innerText = totalAmount;
+
+            // Hide QR and Proceed button if no applications left
+            if (migrantIds.length === 0) {
+                document.getElementById("qrCode").style.display = "none";
+                document.getElementById("proceedApplication").style.display = "none";
+            }
+
+            return totalAmount;
+        }
+
+        document.querySelectorAll(".remove-row").forEach(button => {
+            button.addEventListener("click", function () {
+                this.closest("tr").remove();
+                updateTotalAmount();
+            });
+        });
+
+        document.getElementById("generateQR").addEventListener("click", function () {
+            let totalAmount = updateTotalAmount();
+            if (totalAmount === 0) {
+                alert("No applications to process.");
+                return;
+            }
+
+            // Generate UPI QR Code
+            let upiId = "your-upi-id@upi"; // Replace with actual UPI ID
+            let paymentData = `upi://pay?pa=${upiId}&pn=NOC Payment&am=${totalAmount}&cu=INR`;
+            let qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(paymentData)}`;
+
+            document.getElementById("qrCode").src = qrImageUrl;
+            document.getElementById("qrCode").style.display = "block";
+
+            // Show Proceed button only if QR is displayed
+            document.getElementById("proceedApplication").style.display = "inline-block";
+        });
+
+        document.getElementById("applyNocForm").addEventListener("submit", function (e) {
+            if (migrantIds.length === 0) {
+                e.preventDefault();
+                alert("No applications to submit.");
+                return;
+            }
+            document.getElementById("migrantIds").value = migrantIds.join(",");
+        });
+
+        // Initial amount calculation
+        updateTotalAmount();
+    });
+</script>
+
+
+
+{% endblock %}

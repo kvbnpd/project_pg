@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Migrant Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #d1d1d1;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2a3f54;
+            margin-bottom: 30px;
+        }
+
+        form label {
+            font-weight: bold;
+            color: #2a3f54;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .form-control-file {
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 5px 0;
+            font-size: 16px;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 8px;
+            transition: background 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-save {
+            background-color: #28a745;
+        }
+
+        .btn-save:hover {
+            background-color: #218838;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>✏️ Edit Your Profile</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Full Name:</label>
+                <input type="text" name="full_name" value="{{ migrant.full_name }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone:</label>
+                <input type="text" name="phone" value="{{ migrant.phone }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Age:</label>
+                <input type="number" name="age" value="{{ migrant.age }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>State:</label>
+                <input type="text" name="state" value="{{ migrant.state }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Aadhaar Number:</label>
+                <input type="text" name="aadhaar" value="{{ migrant.aadhaar }}" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>PCC (Police Clearance Certificate):</label>
+                <input type="file" name="pcc" class="form-control-file">
+                {% if migrant.pcc %}
+                    <small>Current: <a href="{{ migrant.pcc.url }}" target="_blank">View PCC</a></small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label>Profile Photo:</label>
+                <input type="file" name="photo" class="form-control-file">
+                {% if migrant.photo %}
+                    <small>Current: <a href="{{ migrant.photo.url }}" target="_blank">View Photo</a></small>
+                {% endif %}
+            </div>
+
+            <div style="text-align:center;">
+                <button type="submit" class="btn btn-save">💾 Save Changes</button>
+                <a href="{% url 'myprofile' %}" class="btn btn-cancel">❌ Cancel</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

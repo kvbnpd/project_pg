@@ -1,0 +1,198 @@
+{% extends "dashboard.html" %}
+
+{% block stylecontent1 %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+    }
+
+    .view-cases-icon {
+        display: inline-block;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .view-cases-icon:hover {
+        color: #0056b3;
+    }
+
+    .container {
+        max-width: 500px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    select, input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    button {
+        background-color: #28a745;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+
+    .site-name {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #007bff;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+    /* Migrant Table Styling */
+    .table-container {
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        margin-top: 20px;
+        margin-left: 0;  /* Remove margin for left panel */
+        max-width: 1200px;
+        width: 100%;  /* Ensure it takes full width */
+    }
+
+    .search-container {
+        margin-bottom: 20px;
+    }
+
+    .search-wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .search-icon {
+        padding: 10px;
+        color: #007bff;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .migrant-photo {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    .view-more {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .view-more:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content1 %}
+<div class="col-md-12"> <!-- Full width for the table content -->
+    <div class="table-container">
+        <h2>Migrant Details</h2>
+
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search by name, state, or phone...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+
+        {% if migrants %}
+        <table id="migrantTable">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Full Name</th>
+                    <th>Age</th>
+                    <th>Phone</th>
+                    <th>State</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for migrant in migrants %}
+                <tr>
+                    <td>
+                        {% if migrant.photo %}
+                            <img src="{{ migrant.photo.url }}" alt="{{ migrant.full_name }}" class="migrant-photo">
+                        {% else %}
+                            <img src="https://via.placeholder.com/80" alt="No photo available" class="migrant-photo">
+                        {% endif %}
+                    </td>
+                    <td>{{ migrant.full_name }}</td>
+                    <td>{{ migrant.age }}</td>
+                    <td>{{ migrant.phone }}</td>
+                    <td>{{ migrant.state }}</td>
+                    <td>
+                        <a href="{% url 'migrantdet' migrant.id %}" class="view-more" title="View More">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color: #ff3333; margin-top: 10px;">No migrants available.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#migrantTable tbody tr');
+
+        rows.forEach(row => {
+            let fullName = row.cells[1].textContent.toLowerCase();
+            let phone = row.cells[3].textContent.toLowerCase();
+            let state = row.cells[4].textContent.toLowerCase();
+
+            if (fullName.includes(filter) || phone.includes(filter) || state.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

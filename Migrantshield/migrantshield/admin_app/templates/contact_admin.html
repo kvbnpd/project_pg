@@ -1,0 +1,38 @@
+{% extends 'adminnav.html' %}
+
+{% block content1 %}
+<div class="main-content">
+    <!-- Existing content like dashboard cards -->
+
+    <!-- New section to display queries -->
+    <div class="queries-section">
+        <h3>User Queries</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Subject</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for query in queries %}
+                    <tr>
+                        <td>{{ query.name }}</td>
+                        <td>{{ query.email }}</td>
+                        <td>{{ query.subject }}</td>
+                        <td>{{ query.message }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">No queries available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- More dashboard content -->
+</div>
+{% endblock %}

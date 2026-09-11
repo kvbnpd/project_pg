@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migrant Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #d1d1d1;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2a3f54;
+            margin-bottom: 20px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-header img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid #4caf50;
+            object-fit: cover;
+        }
+
+        .details {
+            margin-top: 20px;
+        }
+
+        .details p {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .details span {
+            font-weight: bold;
+            color: #2a3f54;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .badge-approved {
+            background-color: #28a745;
+        }
+
+        .badge-pending {
+            background-color: #ffc107;
+        }
+
+        .badge-rejected {
+            background-color: #dc3545;
+        }
+
+        .action-buttons {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .btn-back {
+            background-color: #6c757d;
+        }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-view {
+            background-color: #007bff;
+        }
+
+        .btn-view:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>👤 Migrant Profile</h2>
+
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% else %}
+
+        <div class="profile-header">
+            <img src="{{ migrant.photo.url }}" alt="Profile Photo">
+            <h3>{{ migrant.full_name }}</h3>
+        </div>
+
+        <div class="details">
+            <p><span>📞 Phone:</span> {{ migrant.phone }}</p>
+            <p><span>🎂 Age:</span> {{ migrant.age }} years</p>
+            <p><span>🏙️ State:</span> {{ migrant.state }}</p>
+            <p><span>🆔 Aadhaar:</span> {{ migrant.aadhaar|default:"Not Provided" }}</p>
+            
+            {% if migrant.pcc %}
+            <p><span>📄 PCC:</span> 
+                <a href="{{ migrant.pcc.url }}" target="_blank" class="btn btn-view">View PCC</a>
+            </p>
+            {% else %}
+            <p><span>📄 PCC:</span> Not Available</p>
+            {% endif %}
+            
+            <p><span>🕒 Registered At:</span> {{ migrant.registered_at }}</p>
+            <p>
+                <span>✅ Status:</span>
+                <span class="badge 
+                    {% if migrant.status == 'Approved' %}
+                        badge-approved
+                    {% elif migrant.status == 'Rejected' %}
+                        badge-rejected
+                    {% else %}
+                        badge-pending
+                    {% endif %}
+                ">
+                    {{ migrant.status }}
+                </span>
+            </p>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{% url 'edit_migrant_profile' %}" class="btn btn-view">✏️ Edit Profile</a>
+            <a href="{% url 'workerhome' %}" class="btn btn-back">🔙 Go Back</a>
+        </div>
+
+        {% endif %}
+    </div>
+
+</body>
+</html>

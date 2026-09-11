@@ -1,0 +1,163 @@
+{% extends "admindash.html" %}
+
+{% block stylecontent %}
+    <style>
+        /* Page Styling */
+        h2 {
+            background: linear-gradient(to right, #ff4d4d, #cc0000);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styling */
+        .form-container {
+            width: 50%;
+            margin: 0 auto 20px;
+            background: rgb(255, 255, 255);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .add-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .add-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: rgb(0, 0, 0);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #cc0000;
+            color: rgb(0, 0, 0);
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #000000;
+        }
+
+        tbody tr:hover {
+            background-color: #000000;
+            transition: 0.3s;
+        }
+
+        /* Delete Button */
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            display: inline-block;
+            transition: 0.3s ease-in-out;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .add-btn {
+            text-decoration: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<h2>Add Police Station</h2>
+
+{% if messages %}
+    <div style="margin: 10px auto; text-align: center;">
+        {% for message in messages %}
+            <p style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-weight: bold;">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+<div class="form-container">
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Police Station Name" required><br><br>
+        <input type="text" name="location" placeholder="Location" required><br><br>
+        <input type="text" name="district" placeholder="District" required><br><br>
+        <input type="text" name="email" placeholder="Login Email" required><br><br>
+        <input type="text" name="password" placeholder="Login Password" required><br><br>
+        <button type="submit" class="add-btn">Add Police Station</button>
+    </form>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Station Name</th>
+            <th>Location</th>
+            <th>District</th>
+            <th>Email</th>
+            <th>Actions</th> <!-- New Column -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for station in stations %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ station.name }}</td>
+            <td>{{ station.location }}</td>
+            <td>{{ station.district }}</td>
+            <td>{{ station.login.email }}</td>
+            <td>
+                <a href="{% url 'edit_police_station' station.id %}" class="add-btn">Edit</a>
+                <a href="{% url 'delete_police_station' station.id %}" class="delete-btn" onclick="return confirm('Are you sure you want to delete this station?')">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No police stations added yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

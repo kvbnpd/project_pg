@@ -1,0 +1,139 @@
+{% extends "dashboard.html" %}
+{%block stylecontent%}
+{%endblock%}
+{%block content1%}
+<center>  <h1>NOC Applications</h1>
+      
+    <!-- Contractor Listings -->
+  
+    <div id="noc-applications">
+      {% if applications %}
+      <table class="table table-bordered">
+          <thead class="table-dark">
+              <tr>
+                  <th>Application No</th>
+                  <th>Migrant Name</th>
+                  <th>Status</th>
+                  <th>Applied Date</th>
+                  <th>Approval Date</th>
+                  <th>View</th><th>Change Status</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for appln in applications %}
+                  <tr>
+                      <td>{{ appln.id }}</td>
+                      <td>{{ appln.migrant.full_name }}</td>
+                      <td>
+                          <span class="badge bg-{% if appln.status == 'approved' %}success{% elif appln.status == 'pending' %}warning{% else %}danger{% endif %}">
+                              {{ appln.status|capfirst }}
+                          </span>
+                      </td>
+                      <td>{{ appln.applied_date }}</td>
+                      <td>{{ appln.approval_date|default:"-" }}</td>
+                      <td>
+                          <button class="btn btn-info btn-sm" data-bs-toggle="collapse" data-bs-target="#details_{{ appln.id }}">
+                              View More <i class="fas fa-chevron-down"></i>
+                          </button>
+                      </td>
+                      <td>
+                          {% if appln.status == "Applied" %}
+                              <a class="btn btn-warning btn-sm" href="{% url 'change_noc_to_processing' appln.id %}">
+                                  Processing <i class="fas fa-chevron-down"></i>
+                              </a>
+                          {% elif appln.status == "Processing" %}
+                          <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveModal" data-id="{{ appln.id }}">
+                              Approve <i class="fas fa-check"></i>
+                          </button>
+                          
+                          {% endif %}
+                      </td>
+                      
+                  </tr>
+      
+                  <!-- Collapsible Application Form -->
+                  <tr id="details_{{ appln.id }}" class="collapse">
+                      <td colspan="6">
+                          <div class="card p-3">
+                              <h5>Personal Details</h5>
+                              <p><strong>Full Name:</strong> {{ appln.migrant.full_name }}</p>
+                              <p><strong>Age:</strong> {{ appln.migrant.age }}</p>
+                              <p><strong>Phone:</strong> {{ appln.migrant.phone }}</p>
+                              <p><strong>State:</strong> {{ appln.migrant.state }}</p>
+                              <p><strong>Aadhaar Number:</strong> {{ appln.migrant.aadhaar }}</p>
+                              <p><strong>PCC Certificate:</strong> 
+                                  <a href="{{ appln.migrant.pcc.url }}" target="_blank" class="btn btn-primary btn-sm">View PCC</a>
+                              </p>
+                              <p><strong>Photo:</strong> 
+                                  <img src="{{ appln.migrant.photo.url }}" width="100" class="img-thumbnail">
+                              </p>
+      
+                              <h5>Contractor Details</h5>
+                              <p><strong>Contractor Name:</strong> {{ appln.contractor_details.name }}</p>
+      
+                              <h5>Purpose of NOC</h5>
+                              <p>Migrant worker is recruited in his company. So need NOC to make work him here.</p>
+      
+                              <h5>Application Letter</h5>
+                              <p>
+                                  <strong>To:</strong> <br>
+                                  The Station House Officer (SHO),<br>
+                                  [Local Police Station Name]<br>
+                                  <br>
+                                  Subject: Request for No Objection Certificate (NOC)
+                              </p>
+                              <p>
+                                  Dear Sir/Madam,<br>
+                                  I, {{ appln.migrant.full_name }}, am a migrant worker recruited by {{ appln.contractor_details.name }}. I kindly request a No Objection Certificate (NOC) to work under this contractor. I have attached all the necessary documents, including Aadhaar, PCC, and a formal contract. <br>
+                                  Kindly grant me the NOC at the earliest.<br>
+                                  <br>
+                                  Regards,<br>
+                                  {{ appln.migrant.full_name }}
+                              </p>
+                          </div>
+                      </td>
+                  </tr>
+      
+              {% endfor %}
+          </tbody>
+      </table>
+      
+      <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="approveModalLabel">Approve NOC</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <form id="approveForm">
+                          {% csrf_token %}
+                          <input type="hidden" id="applnId" name="appln_id">
+                          <div class="mb-3">
+                              <label class="form-label">Name of Police Station</label>
+                              <input type="text" class="form-control" name="police_station" required>
+                          </div>
+                          <div class="mb-3">
+                              <label class="form-label">District/Region</label>
+                              <input type="text" class="form-control" name="district" required>
+                          </div>
+                          <div class="mb-3">
+                              <label class="form-label">Officer’s Name</label>
+                              <input type="text" class="form-control" name="officer_name" required>
+                          </div>
+                          <div class="mb-3">
+                              <label class="form-label">Designation</label>
+                              <input type="text" class="form-control" name="designation" required>
+                          </div>
+                          <button type="submit" class="btn btn-primary">Generate NOC</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+      {% else %}
+          <p>No pending NOC applications found.</p>
+      {% endif %}
+  </div>
+{%endblock%}

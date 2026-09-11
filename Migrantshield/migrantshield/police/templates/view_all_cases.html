@@ -1,0 +1,130 @@
+{% extends "dashboard.html" %}
+
+{% block stylecontent1 %}
+<style>
+    .search-container {
+        margin-bottom: 20px;
+    }
+    .search-input {
+        padding: 8px;
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .update-form {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+    .update-form select,
+    .update-form input {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .update-form button {
+        padding: 5px 10px;
+        border: none;
+        background-color: #28a745;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .update-form button:hover {
+        background-color: #218838;
+    }
+</style>
+{% endblock %}
+
+{% block content1 %}
+<div class="search-container">
+    <!-- Removed search button. The search will filter as you type. -->
+    <input type="text" id="fir-search" class="search-input" placeholder="Enter FIR Number">
+</div>
+
+<h2>All Cases</h2>
+<table id="cases-table">
+    <thead>
+        <tr>
+            <th>FIR Number</th>
+            <th>Migrant Name</th>
+            <th>Crime Type</th>
+            <th>Description</th>
+            <th>Date Reported</th>
+            <th>Status</th>
+            <th>Resolving Note</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for case in cases %}
+            <tr>
+                <td>{{ case.firnumber }}</td>
+                <td>{{ case.migrant.full_name }}</td>
+                <td>{{ case.crime_type }}</td>
+                <td>{{ case.description }}</td>
+                <td>{{ case.date_reported }}</td>
+                <td>{{ case.status }}</td>
+                <td>
+                    {% if case.resolving_note %}
+                        {{ case.resolving_note }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="POST" action="{% url 'update_case' case.id %}" class="update-form">
+                        {% csrf_token %}
+                        <select name="status" required>
+                            <option value="Pending" {% if case.status == "Pending" %}selected{% endif %}>Pending</option>
+                            <option value="Under Investigation" {% if case.status == "Under Investigation" %}selected{% endif %}>Under Investigation</option>
+                            <option value="Resolved" {% if case.status == "Resolved" %}selected{% endif %}>Resolved</option>
+                        </select>
+                        <input type="text" name="resolving_note" placeholder="Resolving Note" value="{{ case.resolving_note|default:'' }}">
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="8">No cases found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("fir-search");
+        const table = document.getElementById("cases-table");
+        const tbody = table.getElementsByTagName("tbody")[0];
+        const rows = tbody.getElementsByTagName("tr");
+
+        searchInput.addEventListener("keyup", function() {
+            const filter = searchInput.value.toUpperCase();
+            for (let i = 0; i < rows.length; i++) {
+                const firCell = rows[i].getElementsByTagName("td")[0];
+                if (firCell) {
+                    const textValue = firCell.textContent || firCell.innerText;
+                    rows[i].style.display = (textValue.toUpperCase().indexOf(filter) > -1) ? "" : "none";
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

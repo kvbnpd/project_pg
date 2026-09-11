@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Police Dashboard | NOC Requests</title>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Police Dashboard for NOC Requests">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="author" content="Police Admin">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'indexstyle/images/favicon.png' %}" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'indexstyle/plugins/themefisher-font/style.css'%}">
+  <link rel="stylesheet" href="{% static 'indexstyle/plugins/bootstrap/bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'indexstyle/plugins/lightbox2/css/lightbox.min.css'%}">
+  <link rel="stylesheet" href="{% static 'indexstyle/plugins/animate/animate.css'%}">
+  <link rel="stylesheet" href="{% static 'indexstyle/plugins/slick/slick.css'%}">
+  <link rel="stylesheet" href="{% static 'indexstyle/css/style.css' %}">
+  {% block stylecontent1 %}
+  {% endblock %}
+</head>
+<body id="body">
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class='preloader'>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- Fixed Navigation -->
+  <header class="navigation fixed-top">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light px-0">
+        <a class="navbar-brand logo" href="dashboard.html">
+          <img loading="lazy" class="logo-default" src="{% static 'indexstyle/images/logo.png' %}" alt="logo" />
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+          aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navigation">
+          <ul class="navbar-nav ml-auto text-center">
+            <li class="nav-item active"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="noc-requests.html">NOC Requests</a></li>
+            <li class="nav-item"><a class="nav-link" href="employee-registrations.html">Employee Registrations</a></li>
+            <li class="nav-item"><a class="nav-link" href="logout.html">Logout</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Content Section -->
+  {% block content1 %}
+  <div class="container">
+    <h1 class="my-4">Pending NOC Requests</h1>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Request ID</th>
+          <th>Agent Name</th>
+          <th>Employee Name</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Example Row -->
+        <tr>
+          <td>001</td>
+          <td>Agent John</td>
+          <td>Employee A</td>
+          <td>Pending</td>
+          <td>
+            <button class="btn btn-success" onclick="approveRequest(0o1)">Approve</button>
+            <button class="btn btn-danger" onclick="rejectRequest(0o1)">Reject</button>
+          </td>
+        </tr>
+        <!-- More Rows -->
+      </tbody>
+    </table>
+  </div>
+  {% endblock %}
+
+  <!-- Footer -->
+  <footer id="footer" class="bg-one">
+    <div class="top-footer">
+      <div class="container">
+        <div class="row justify-content-around">
+          <div class="col-lg-4 col-md-6 mb-5 mb-lg-0">
+            <h3>About</h3>
+            <p>Police department information and other relevant details.</p>
+          </div>
+          <div class="col-lg-3 col-md-6 mb-5 mb-lg-0">
+            <ul>
+              <li><h3>Quick Links</h3></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="noc-requests.html">NOC Requests</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <h5>&copy; Copyright 2025. All rights reserved.</h5>
+      <h6>Design and Developed by Police Team</h6>
+    </div>
+  </footer>
+
+  <!-- Essential Scripts -->
+  <script src="{% static 'indexstyle/plugins/jquery/jquery.min.js'%}"></script>
+  <script src="{% static 'indexstyle/plugins/bootstrap/bootstrap.min.js'%}"></script>
+  <script src="{% static 'indexstyle/plugins/lightbox2/js/lightbox.min.js'%}"></script>
+  <script src="{% static 'indexstyle/plugins/slick/slick.min.js'%}"></script>
+  <script src="{% static 'indexstyle/js/script.js'%}"></script>
+
+</body>
+</html>

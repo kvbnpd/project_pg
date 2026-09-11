@@ -1,0 +1,88 @@
+{% extends 'adminnav.html' %}
+
+{% block content1 %}
+    <style>
+        .content {
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+</head>
+<body>
+<div class="content">
+    <h2>Manage Work Types</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Work Type</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="work-type-list">
+                    <tr>
+                        <td>1</td>
+                        <td>Plumbing</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" onclick="deleteWorkType(this)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <h4>Add Work Type</h4>
+            <form id="add-work-type-form">
+                <div class="mb-3">
+                    <label for="workTypeInput" class="form-label">Work Type</label>
+                    <input type="text" class="form-control" id="workTypeInput" placeholder="Enter work type">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="addWorkType()">Add</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addWorkType() {
+        const workTypeInput = document.getElementById('workTypeInput');
+        const workTypeList = document.getElementById('work-type-list');
+
+        if (workTypeInput.value.trim() === '') {
+            alert('Please enter a work type.');
+            return;
+        }
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${workTypeList.children.length + 1}</td>
+            <td>${workTypeInput.value.trim()}</td>
+            <td>
+                <button class="btn btn-sm btn-danger" onclick="deleteWorkType(this)">Delete</button>
+            </td>
+        `;
+        workTypeList.appendChild(row);
+        workTypeInput.value = '';
+    }
+
+    function deleteWorkType(button) {
+        const row = button.closest('tr');
+        row.remove();
+        updateWorkTypeNumbers();
+    }
+
+    function updateWorkTypeNumbers() {
+        const rows = document.querySelectorAll('#work-type-list tr');
+        rows.forEach((row, index) => {
+            row.querySelector('td:first-child').textContent = index + 1;
+        });
+    }
+</script>
+{% endblock %}

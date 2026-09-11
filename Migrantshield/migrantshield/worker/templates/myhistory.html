@@ -1,0 +1,364 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>MigrantShield – Protecting against intrusion and misconduct</title>
+  
+    <!-- Mobile Specific Metas
+    ================================================== -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="One page parallax responsive HTML Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="author" content="Themefisher">
+    <meta name="generator" content="Themefisher Bingo HTML Template v1.0">
+  
+    <!-- Favicon -->
+    
+  
+    <!-- CSS
+    ================================================== -->
+    <!-- Themefisher Icon font -->
+    <link rel="stylesheet" href="{% static 'indexstyle/plugins/themefisher-font/style.css'%}">
+    <!-- bootstrap.min css -->
+    <link rel="stylesheet" href="{% static 'indexstyle/plugins/bootstrap/bootstrap.min.css'%}">
+    <!-- Lightbox.min css -->
+    <link rel="stylesheet" href="{% static 'indexstyle/plugins/lightbox2/css/lightbox.min.css'%}">
+    <!-- animation css -->
+    <link rel="stylesheet" href="{% static 'indexstyle/plugins/animate/animate.css'%}">
+    <!-- Slick Carousel -->
+    <link rel="stylesheet" href="{% static 'indexstyle/plugins/slick/slick.css'%}">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{% static 'indexstyle/css/style.css' %}">
+  <style>
+    /* General Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding: 0;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    padding: 20px;
+    height: 100vh;
+    color: white;
+    border-radius: 10px;
+}
+
+.sidebar .card {
+    background: white;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.sidebar .card:hover {
+    transform: scale(1.05);
+}
+
+/* Navbar Styling */
+.navbar {
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Sections & Tables */
+.section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.5s ease-in-out;
+}
+
+.section h2 {
+    border-left: 5px solid #007bff;
+    padding-left: 15px;
+    font-size: 1.4rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #007bff;
+    color: white;
+}
+
+td {
+    background: #f8f9fa;
+}
+
+tr:hover {
+    background: #eaf4ff;
+    transition: 0.3s;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.pending {
+    background: #ffc107;
+    color: #333;
+}
+
+.approved {
+    background: #28a745;
+    color: white;
+}
+
+.rejected {
+    background: #dc3545;
+    color: white;
+}
+
+/* Buttons */
+.btn {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* Smooth Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+        .site-name {
+          font-family: 'Montserrat', sans-serif; /* Use Montserrat for a modern look */
+          font-size: 1.8rem; /* Increase font size */
+          font-weight: 700; /* Make it bold */
+          color: #007bff; /* Blue color for visibility */
+          text-transform: uppercase; /* Uppercase for style */
+          letter-spacing: 1.5px; /* Add spacing for a premium look */
+        }
+   
+    .sidebar {
+      background: #f8f9fa;
+      padding: 20px;
+      height: 100vh;
+    }
+    .search-box {
+      margin-bottom: 20px;
+    }
+    .contractor-card {
+      border-radius: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: 0.3s;
+    }
+    .contractor-card:hover {
+      transform: translateY(-5px);
+    }
+    .btn-apply {
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+    }
+    .status-badge {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+    .pending { background-color: #ffc107; color: black; }
+    .approved { background-color: #28a745; color: white; }
+    .rejected { background-color: #dc3545; color: white; }
+    .withdraw-btn {
+        background-color: #ff6f61;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Include Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light px-3 shadow-sm bg-white">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img loading="lazy" src="{% static 'indexstyle/images/migrantlogo.webp' %}" 
+            alt="logo" style="width:80px; height:80px; margin-right:10px;">
+        <span class="site-name fw-bold text-primary fs-4">MigrantShield</span>
+    </a>
+
+    <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation"
+        aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+        <ul class="navbar-nav text-center">
+            <li class="nav-item">
+                <a class="nav-link btn btn-outline-primary rounded-pill px-4 mx-2 fw-bold" 
+                   href="http://127.0.0.1:8000/workerhome">⬅️ Back</a>
+            </li>
+            <!-- Home Button -->
+            <li class="nav-item">
+                <a class="nav-link btn btn-outline-primary rounded-pill px-4 mx-2 fw-bold" 
+                   href="http://127.0.0.1:8000/">🏠 Home</a>
+            </li>
+
+            <!-- Sign Out Button -->
+            <li class="nav-item">
+                <a class="nav-link btn btn-danger rounded-pill px-4 mx-2 fw-bold text-white shadow-lg" 
+                   href="{% url 'login' %}">🚪 Sign Out</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- Left Panel -->
+    <div class="col-md-3 sidebar">
+      <div class="card mb-3">
+        <div class="card-body text-center">
+          <h5 class="card-title">Find Work</h5>
+          <p class="card-text">Browse job opportunities available.</p>
+          <a href="{%url 'workerhome'%}" class="btn btn-primary">Explore</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">Check Application Status</h5>
+          <p class="card-text">Track your job applications.</p>
+          <a href="{% url 'check_application_status' %}" class="btn btn-success">Check Now</a>
+
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">My history</h5>
+          <p class="card-text">Track my working history.</p>
+          <a href="{% url 'myhistory' %}" class="btn btn-warning">Check Now</a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="col-md-9">
+        <h1>Migrant Details</h1>
+    
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% else %}
+            <div class="section">
+                <h2>Personal Information</h2>
+                <p><strong>Name:</strong> {{ migrant.full_name }}</p>
+                <p><strong>Age:</strong> {{ migrant.age }}</p>
+                <p><strong>Phone:</strong> {{ migrant.phone }}</p>
+                <p><strong>State:</strong> {{ migrant.state }}</p>
+                <p><strong>Aadhaar:</strong> {{ migrant.aadhaar }}</p>
+                <p><strong>Status:</strong> {{ migrant.status }}</p>
+            </div>
+            
+            <div class="section">
+                <h2>Application Requests</h2>
+                <table>
+                    <tr><th>Contractor</th><th>Status</th><th>Date</th></tr>
+                    {% for app in applications %}
+                        <tr><td>{{ app.contractor.name }}</td><td>{{ app.status }}</td><td>{{ app.created_at }}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>Crime Reports</h2>
+                <table>
+                    <tr><th>FIR Number</th><th>Type</th><th>Description</th><th>Status</th><th>Date Reported</th></tr>
+                    {% for report in crime_reports %}
+                        <tr><td>{{ report.firnumber }}</td><td>{{ report.crime_type }}</td><td>{{ report.description }}</td><td>{{ report.status }}</td><td>{{ report.date_reported }}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>NOC Applications</h2>
+                <table>
+                    <tr><th>Applied Date</th><th>Status</th></tr>
+                    {% for noc in noc_applications %}
+                        <tr><td>{{ noc.applied_date }}</td><td>{{ noc.status }}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>Issued NOCs</h2>
+                <table>
+                    <tr><th>Issued Date</th><th>Download</th></tr>
+                    {% for noc in noc_issued %}
+                        <tr><td>{{ noc.issued_date }}</td><td><a href="{{ noc.noc.url }}" target="_blank">Download NOC</a></td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>Work Schedule</h2>
+                <table>
+                    <tr><th>Job</th><th>Venue</th><th>Date</th><th>Contractor</th></tr>
+                    {% for work in schedule %}
+                        <tr><td>{{ work.job }}</td><td>{{ work.venue }}</td><td>{{ work.date }}</td><td>{{ work.contractor }}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>Salary Payments</h2>
+                <table>
+                    <tr><th>Month/Year</th><th>Total Days</th><th>Amount</th><th>Paid Date</th></tr>
+                    {% for salary in salary_payments %}
+                        <tr><td>{{ salary.month }}/{{ salary.year }}</td><td>{{ salary.total_days }}</td><td>{{ salary.salary_amount }}</td><td>{{ salary.paid_at }}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{% extends 'admindash.html' %}
+
+{% block content %}
+    <h2 style="margin-bottom: 20px;">Payment Details</h2>
+
+    <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse;">
+        <tr style="background-color: #ff3333; color: white;">
+            <th>Receipt No</th>
+            <td>NOC-{{ payment.date|date:"YmdHis" }}</td>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <td>{{ payment.date|date:"d-m-Y H:i:s" }}</td>
+        </tr>
+        <tr>
+            <th>Total Amount (₹)</th>
+            <td>{{ payment.amount }}</td>
+        </tr>
+        <tr>
+            <th>Number of Applications</th>
+            <td>{{ migrants|length }}</td>
+        </tr>
+    </table>
+
+    <h3 style="margin-top: 20px;">Applicant Details</h3>
+    <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; margin-top: 10px;">
+        <thead>
+            <tr style="background-color: #ff3333; color: white;">
+                <th>S.No</th>
+                <th>Applicant Name</th>
+                <th>Age</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for migrant in migrants %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ migrant.full_name }}</td>
+                    <td>{{ migrant.age }}</td>
+                    <td>{{ migrant.phone }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center;">No applicant data found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <a href="{% url 'view_payments' %}" style="color: #ff3333;">Back to Payment History</a>
+    </div>
+{% endblock %}

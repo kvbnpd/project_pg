@@ -1,0 +1,101 @@
+{% extends "agent_nav.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">NOC Approved Migrants</h2>
+
+    <!-- Search Bar -->
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search Migrants...">
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Migrant</th>
+                    <th>Phone</th>
+                    <th>State</th>
+                    <th>Aadhaar</th>
+                    <th>PCC</th>
+                    <th>Photo</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="migrantTableBody">
+                {% for migrant in migrants %}
+                <tr id="row-{{ migrant.id }}">
+                    <td>{{ migrant.full_name }}</td>
+                    <td>{{ migrant.phone }}</td>
+                    <td>{{ migrant.state }}</td>
+                    <td>{{ migrant.aadhaar }}</td>
+                    <td>
+                        <a href="{{ migrant.pcc.url }}" class="btn btn-info btn-sm" target="_blank">View PCC</a>
+                    </td>
+                    <td>
+                        <img src="{{ migrant.photo.url }}" class="img-thumbnail" width="50" height="50">
+                    </td>
+                    <td id="status-{{ migrant.id }}">
+                        <span class="badge {% if migrant.status == 'Active' %}bg-success{% else %}bg-danger{% endif %}">
+                            {{ migrant.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning btn-sm status-btn" data-migrant-id="{{ migrant.id }}" data-status="{{ migrant.status }}">
+                            {% if migrant.status == 'Active' %}Deactivate{% else %}Activate{% endif %}
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center text-danger">No NOC-approved migrants found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Search functionality
+        $("#searchInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#migrantTableBody tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+
+        // Status change functionality
+        $(".status-btn").click(function(){
+            var migrantId = $(this).data("migrant-id");
+            var currentStatus = $(this).data("status");
+            var newStatus = currentStatus === "Active" ? "Inactive" : "Active";
+            var button = $(this);
+
+            $.ajax({
+                url: "{% url 'update_migrant_status' %}",
+                type: "POST",
+                data: {
+                    migrant_id: migrantId,
+                    status: newStatus,
+                    csrfmiddlewaretoken: "{{ csrf_token }}"
+                },
+                success: function(response) {
+                    if(response.success) {
+                        $("#status-" + migrantId).html('<span class="badge ' + (newStatus === "Active" ? "bg-success" : "bg-danger") + '">' + newStatus + '</span>');
+                        button.text(newStatus === "Active" ? "Deactivate" : "Activate");
+                        button.data("status", newStatus);
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+    

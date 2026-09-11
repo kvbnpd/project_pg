@@ -1,0 +1,268 @@
+{% extends "dashboard.html" %}
+
+{% block stylecontent %}
+<style>
+    /* General Section Styles */
+    .section {
+        margin-bottom: 40px;
+        background-color: #ffffff; /* White background */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Light shadow */
+    }
+    .section h3 {
+        border-bottom: 2px solid #333333; /* Dark border */
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        color: #333; /* Dark text for contrast */
+    }
+    .detail-item {
+        margin-bottom: 10px;
+        color: #333; /* Dark text */
+    }
+
+    /* Table Styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background-color: #ffffff; /* White background for table */
+        color: #333; /* Dark text */
+    }
+    table, th, td {
+        border: 1px solid #ddd; /* Light border */
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f1f1f1; /* Light header */
+        color: #333333; /* Dark header text */
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9; /* Light background for even rows */
+    }
+    tr:hover {
+        background-color: #f1f1f1; /* Light hover effect */
+    }
+
+    /* Profile Photo */
+    img.profile-photo {
+        max-width: 150px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-top: 10px;
+    }
+
+    /* Links */
+    a {
+        color: #333333; /* Dark links */
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="migrant-detail">
+    <h2 style="color: #333333;">{{ migrant.full_name }}</h2>
+    
+    <!-- Personal Details Section -->
+    <div class="personal-details section">
+        <h3>Personal Details</h3>
+        <div class="detail-item"><strong>Age:</strong> {{ migrant.age }}</div>
+        <div class="detail-item"><strong>Phone:</strong> {{ migrant.phone }}</div>
+        <div class="detail-item"><strong>State:</strong> {{ migrant.state }}</div>
+        <div class="detail-item"><strong>Aadhaar:</strong> {{ migrant.aadhaar }}</div>
+        <div class="detail-item">
+            <strong>PCC:</strong>
+            {% if migrant.pcc %}
+                <a href="{{ migrant.pcc.url }}" target="_blank">View PCC</a>
+            {% else %}
+                N/A
+            {% endif %}
+        </div>
+        <div class="detail-item">
+            <strong>Photo:</strong>
+            {% if migrant.photo %}
+                <img class="profile-photo" src="{{ migrant.photo.url }}" alt="{{ migrant.full_name }}">
+            {% else %}
+                No photo available.
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Crime Reports Section -->
+    <div class="crime-reports section">
+        <h3>Crime Reports</h3>
+        {% if crime_reports %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>FIR Number</th>
+                        <th>Crime Type</th>
+                        <th>Description</th>
+                        <th>Date Reported</th>
+                        <th>Status</th>
+                        <th>Resolving Note</th>
+                        <th>Reported By</th>
+                        <th>Reported At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in crime_reports %}
+                    <tr>
+                        <td>{{ report.firnumber }}</td>
+                        <td>{{ report.crime_type }}</td>
+                        <td>{{ report.description }}</td>
+                        <td>{{ report.date_reported }}</td>
+                        <td>{{ report.status }}</td>
+                        <td>{{ report.resolving_note|default:"N/A" }}</td>
+                        <td>{{ report.reported_by }}</td>
+                        <td>{{ report.reported_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No crime reports available.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Application Requests Section -->
+    <div class="application-requests section">
+        <h3>Application Requests</h3>
+        {% if application_requests %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Contractor</th>
+                        <th>Status</th>
+                        <th>Requested On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in application_requests %}
+                    <tr>
+                        <td>{{ app.contractor.name }}</td>
+                        <td>{{ app.status }}</td>
+                        <td>{{ app.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No application requests available.</p>
+        {% endif %}
+    </div>
+    
+    <!-- NOC Applications Section -->
+    <div class="noc-applications section">
+        <h3>NOC Applications</h3>
+        {% if noc_applications %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Applied Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for noc in noc_applications %}
+                    <tr>
+                        <td>{{ noc.applied_date }}</td>
+                        <td>{{ noc.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No NOC applications available.</p>
+        {% endif %}
+    </div>
+    
+    <!-- NOC Issuance Section -->
+    <div class="noc-table section">
+        <h3>NOC Issued</h3>
+        {% if noc_tables %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Issued Date</th>
+                        <th>NOC File</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for noc in noc_tables %}
+                    <tr>
+                        <td>{{ noc.issued_date }}</td>
+                        <td>
+                            <a href="{{ noc.noc.url }}" target="_blank">View NOC</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No NOC issued.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Payments Section -->
+    <div class="payments section">
+        <h3>Payments</h3>
+        {% if payments %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr>
+                        <td>₹{{ payment.amount }}</td>
+                        <td>{{ payment.date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No payments found.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Work Entries Section -->
+    <div class="work-entries section">
+        <h3>Work Entries</h3>
+        {% if work_entries %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Job Venue</th>
+                        <th>Job Description</th>
+                        <th>Job Start Date</th>
+                        <th>Work Entry Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for work in work_entries %}
+                    <tr>
+                        <td>{{ work.jobdetails.venue }}</td>
+                        <td>{{ work.jobdetails.description }}</td>
+                        <td>{{ work.jobdetails.startdate }}</td>
+                        <td>{{ work.date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No work entries available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

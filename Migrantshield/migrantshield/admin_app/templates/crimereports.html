@@ -1,0 +1,36 @@
+<!-- filepath: admin_app/templates/admin_app/view_crime_reports.html -->
+{% extends "admindash.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Crime Reports</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Reported By</th>
+                <th>Migrant</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in crime_reports %}
+            <tr>
+                <td>{{ report.id }}</td>
+                <td>{{ report.reported_by }}</td>
+                <td>{{ report.migrant.name }}</td>
+                <td>{{ report.description }}</td>
+                <td>{{ report.date }}</td>
+                <td>{{ report.status }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No crime reports found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

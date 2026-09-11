@@ -1,0 +1,244 @@
+{% extends "admindash.html" %}
+
+{% block stylecontent %}
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1f1f1f;
+            color: #fff;
+            height: 100vh;
+            padding-top: 20px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fbc02d;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .sidebar ul li:hover {
+            background: #333333;
+        }
+
+        .sidebar ul li i {
+            margin-right: 10px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #1c1c1c;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #fbc02d;
+        }
+
+        .search-bar {
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #2c2c2c;
+            color: #fff;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #2c2c2c;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #fbc02d;
+        }
+
+        /* Charts */
+        .charts {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .chart-container {
+            background: #2c2c2c;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 300px !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .charts {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar h2, .sidebar ul li span {
+                display: none;
+            }
+
+            .sidebar ul li i {
+                margin-right: 0;
+                text-align: center;
+                display: block;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!-- Main Content -->
+    <div class="dashboard-cards">
+        <div class="card">
+            <h3>Issued NOC</h3>
+            <p id="issuedNoc">0</p> <!-- Placeholder for NOC count -->
+        </div>
+        <div class="card">
+            <h3>Total Migrants</h3>
+            <p id="totalMigrants">0</p> <!-- Placeholder for Migrants count -->
+        </div>
+        <div class="card">
+            <h3>Total Contractors</h3>
+            <p id="totalContractors">0</p> <!-- Placeholder for Contractors count -->
+        </div>
+        <div class="card">
+            <h3>Payments</h3>
+            <p id="totalPayments">$0</p> <!-- Placeholder for Payments -->
+        </div>
+        <div class="card">
+            <h3>Reported Cases</h3>
+            <p id="reportedCases">0</p> <!-- Placeholder for Reported Cases -->
+        </div>
+    </div>
+    
+    <div class="charts">
+        <div class="chart-container">
+            <h3>NOC Issued Overview</h3>
+            <canvas id="nocChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Payments Overview</h3>
+            <canvas id="paymentChart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Fetch dashboard data from the API
+        fetch('/api/dashboard-data/')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); // Debug: Check the data in the browser console
+
+        // Update Dashboard Cards
+        document.getElementById("issuedNoc").textContent = data.dashboard_data.issued_noc;
+        document.getElementById("totalMigrants").textContent = data.dashboard_data.total_migrants;
+        document.getElementById("totalContractors").textContent = data.dashboard_data.total_contractors;
+        document.getElementById("totalPayments").textContent = `$${data.dashboard_data.payments}`;
+        document.getElementById("reportedCases").textContent = data.dashboard_data.reported_cases;
+
+        // NOC Chart
+        const nocChart = new Chart(document.getElementById("nocChart"), {
+            type: 'line',
+            data: {
+                labels: data.noc_chart_data.map(item => item.month),  // Extract months
+                datasets: [{
+                    label: "NOC Issued",
+                    data: data.noc_chart_data.map(item => item.count),  // Extract counts
+                    borderColor: "#fbc02d",
+                    backgroundColor: "rgba(251, 192, 45, 0.1)",
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Payments Chart
+        const paymentChart = new Chart(document.getElementById("paymentChart"), {
+            type: 'line',
+            data: {
+                labels: data.payment_chart_data.map(item => item.month),  // Extract months
+                datasets: [{
+                    label: "Total Payments",
+                    data: data.payment_chart_data.map(item => item.total),  // Extract totals
+                    borderColor: "#f57c00", // Orange line color
+                    backgroundColor: "rgba(245, 124, 0, 0.1)", // Light orange fill
+                    borderWidth: 2,
+                    tension: 0.4 // Smooth curve
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching dashboard data:', error));
+</script>
+</body>
+</html>
+
+{% endblock %}

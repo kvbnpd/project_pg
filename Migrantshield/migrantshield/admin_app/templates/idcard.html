@@ -1,0 +1,75 @@
+{% extends "agent_nav.html" %}
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    
+    .id-card {
+        background: white;
+        border: 2px solid #007bff;
+        border-radius: 10px;
+        text-align: center;
+        padding: 15px;
+        width: 100%;
+        max-width: 300px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .id-card-header {
+        background-color: #007bff;
+        color: white;
+        padding: 5px;
+        border-radius: 5px 5px 0 0;
+    }
+    
+    .id-photo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 2px solid #007bff;
+    }
+    
+    .id-card-footer {
+        margin-top: 10px;
+    }
+    
+    .btn-primary {
+        font-size: 14px;
+    }
+
+</style>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">NOC Approved Migrants - ID Cards</h2>
+    
+    <div class="row">
+        {% for migrant in migrants %}
+        <div class="col-md-4 mb-4">
+            <div class="id-card shadow p-3 rounded">
+                <div class="id-card-header text-center">
+                    <h5>Government of India</h5>
+                    <h6>Migrant Worker ID</h6>
+                </div>
+                <div class="id-card-body text-center">
+                    <img src="{{ migrant.photo.url }}" class="id-photo mb-2" alt="Migrant Photo">
+                    <h5 class="text-uppercase">{{ migrant.full_name }}</h5>
+                    <p><strong>Age:</strong> {{ migrant.age }}</p>
+                    <p><strong>Unique ID:</strong> UMIN{{ migrant.id|stringformat:"012d" }}</p>
+                    <p><strong>Nationality:</strong> Indian</p>
+                </div>
+                <div class="id-card-footer text-center">
+                    <a href="{% url 'download_id_card_individual' migrant.id %}" class="btn btn-primary btn-sm">
+                        Download ID Card
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center text-danger">
+            <p>No NOC-approved migrants found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
